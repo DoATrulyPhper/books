@@ -1,4 +1,3 @@
 # books
 read run.php
-server
-php、apache｜nginx、redis
+server php、apache｜nginx、redis
