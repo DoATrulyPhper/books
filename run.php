@@ -1,12 +1,31 @@
+#!/usr/bin/php
 <?php
+# use php exec.php -f fileName
+
+if (php_sapi_name() != 'cli') {
+    die('error: currently not in cli mode!' . PHP_EOL);
+}
+
+// file
+if (isset($argv[1]) && $argv[1] != '-f') {
+    die('error: missing parameter -f' . PHP_EOL);
+}
+
+$source_file = $argv[2] ?? '';
+
+
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
 
-$file_name = './static/books/' . '全球武神.txt';
-$create_file_path = './static/books/1';
+$file_name = __DIR__.'/static/books/' . $source_file;
+
+$path_info= explode('.',$source_file);
+
+$create_file_path = './static/books/'.$path_info[0];
+
 $str = file_get_contents($file_name);
 // 乱码文件请打开这个
-// $str=mb_convert_encoding(file_get_contents($file_name),"UTF-8","GBK");
+$str=mb_convert_encoding(file_get_contents($file_name),"UTF-8","GBK");
 $arr = [];
 if (preg_match_all(
     "/(\x{7b2c})(\s*)([\x{96f6}\x{4e00}\x{4e8c}\x{4e09}\x{56db}\x{4e94}\x{516d}\x{4e03}\x{516b}\x{4e5d}\x{5341}\x{767e}\x{5343}0-9]+)(\s*)([\x{7ae0}\x{8282}]+)/u",
@@ -39,14 +58,17 @@ foreach ($arr as $key => $value) {
     }
     @$bookContent[$matches[$key] . $chaptername] = $value[1];
 }
+$i = 0;
 foreach ($bookContent as $key => $value) {
-    $file_name = $create_file_path . '/' . rand(10000, 99999) . '.txt';
+    $i++;
+    $file_name = $create_file_path . '/' . $i . '.txt';
     if(!is_dir($create_file_path)){
         mkdir($create_file_path);
     }
     file_put_contents($file_name, $value);
-    $redis->lpush("oushen", $key . '|' . $file_name);
+    $redis->lpush($path_info[0], $key . '|' . $file_name);
 }
+$redis->lpush('books',$path_info[0]);
 
 
 

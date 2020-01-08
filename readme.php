@@ -8,17 +8,17 @@ $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
 
 $index = $info['index'];
-@$next_info = explode('|',$redis->lrange('oushen',$index-1,$index-1)[0]);
-@$prev_info = explode('|',$redis->lrange('oushen',$index+1,$index+1)[0]);
+$bookname = $info['bookname'];
+@$next_info = explode('|',$redis->lrange($bookname,$index-1,$index-1)[0]);
+@$prev_info = explode('|',$redis->lrange($bookname,$index+1,$index+1)[0]);
 $next = '';
 if(count($next_info) > 1){
-    $next = './readme.php?title='.$next_info[0].'&path='.$next_info[1].'&index='.($index-1);
+    $next = './readme.php?title='.$next_info[0].'&path='.$next_info[1].'&index='.($index-1).'&bookname='.$bookname;
 }
 $prev = '';
 if(count($prev_info) > 1){
-    $prev = './readme.php?title='.$prev_info[0].'&path='.$prev_info[1].'&index='.($index+1);
+    $prev = './readme.php?title='.$prev_info[0].'&path='.$prev_info[1].'&index='.($index+1).'&bookname='.$bookname;
 }
-
 ?>
 <!DOCTYPE html>
 <html>
