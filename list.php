@@ -1,18 +1,27 @@
 <?php
+include_once ('init.php');
+$bookname = $_GET['title'];
 
-$title = $_GET['title'];
+# redis
+$list = $redis->lrange($bookname, 0 ,-1);
 
-$redis = new Redis();
-$redis->connect('127.0.0.1', 6379);
+# mysql
+// $list = $dbh->query("SELECT * FROM `novel_details` WHERE novel_name='$title'")
+//     ->fetchAll(PDO::FETCH_ASSOC);
 
-$list = $redis->lrange($title, 0 ,-1);
-$list = array_reverse($list);
 $i = count($list);
+krsort($list);
 foreach ($list as $key => $value) {
     $i--;
+    # redis
 	$info = explode('|',$value);
-	$bookname = explode('/',$info[1])[3];
-	$url = './readme.php?title='.$info[0].'&path='.$info[1].'&index='.$i.'&bookname='.$bookname;
+    $title = $info[0];
+    $path = $info[1];
 
-	echo "<a href='".$url."'>".$info[0]."</a>"."<br />";
+    # mysql
+    // $title = $value['novel_title'];
+    // $path = $value['file_path'];
+
+	$url = './readme.php?title='.$title.'&path='.$path.'&index='.$i.'&bookname='.$bookname;
+	echo "<a href='".$url."'>".$title."</a>"."<br />";
 }
