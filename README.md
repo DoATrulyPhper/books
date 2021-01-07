@@ -1,1 +1,1 @@
-test
+see run.php
