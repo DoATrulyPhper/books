@@ -70,14 +70,14 @@ foreach ($bookContent as $key => $value) {
 
     #['novelName'=>$path_info[0],'novelTitle'=>$key,'filePath'=>$file_name]
     #redis
-    $redis->lpush($path_info[0], $key . '|' . $file_name);
+    #$redis->lpush($path_info[0], $key . '|' . $file_name);
 
     # mysql
     $rs = $dbh->exec("INSERT INTO `novel_details` (`novel_name`,`novel_title`,`file_path`) VALUES ('$path_info[0]','$key','$file_name')");
 }
 
 # redis
-$redis->lpush('books', $path_info[0]);
+#$redis->lpush('books', $path_info[0]);
 
 # mysql novel_list
 $rs = $dbh->exec("INSERT INTO `novel_list` (`title`) VALUES ('$path_info[0]')");

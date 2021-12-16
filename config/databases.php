@@ -1,12 +1,10 @@
 <?php
-
 return [
-
     'mysql' => [
-        'host' => env('DB_HOST', '127.0.0.1'),
-        'database' => env('DB_DATABASE', 'novel1'),
+        'host' => env('DB_HOST', '182.92.57.225'),
+        'database' => env('DB_DATABASE', 'novel'),
         'username' => env('DB_USERNAME', 'root'),
-        'password' => env('DB_PASSWORD', 'root'),
+        'password' => env('DB_PASSWORD', '123456'),
     ],
 
     'redis' => [
